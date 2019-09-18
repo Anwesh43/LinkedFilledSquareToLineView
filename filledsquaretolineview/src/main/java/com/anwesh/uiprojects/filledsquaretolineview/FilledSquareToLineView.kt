@@ -19,8 +19,37 @@ val scGap : Float = 0.01f
 val color1 : Int = Color.parseColor("#9C27B0")
 val color2 : Int = Color.parseColor("#4CAF50")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val sizeFactor : Float = 2.9f
 val delay : Long = 25
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
+
+fun Canvas.drawFilledSquareToLine(i : Int, sc : Float, size : Float, paint : Paint) {
+    val sci : Float = sc.divideScale(i, parts)
+    save()
+    scale(1f - 2 * i, 1f)
+    paint.color = color1
+    drawRect(RectF(0f, -size, size * sci, size), paint)
+    paint.color = color2
+    drawRect(RectF(size * (1 - sci), -size, size, size), paint)
+    restore()
+}
+
+fun Canvas.drawFilledSquareParts(sc : Float, size : Float, paint : Paint) {
+    for (j in 0..(parts - 1)) {
+        drawFilledSquareToLine(j, sc, size, paint)
+    }
+}
+
+fun Canvas.drawFSPNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    save()
+    translate(gap * (i + 1), h / 2)
+    drawFilledSquareParts(scale, size, paint)
+    restore()
+}
