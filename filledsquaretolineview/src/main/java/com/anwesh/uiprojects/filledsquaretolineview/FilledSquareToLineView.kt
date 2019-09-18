@@ -208,4 +208,14 @@ class FilledSquareToLineView(ctx : Context)  : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : FilledSquareToLineView {
+            val view : FilledSquareToLineView = FilledSquareToLineView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+
+    }
 }
