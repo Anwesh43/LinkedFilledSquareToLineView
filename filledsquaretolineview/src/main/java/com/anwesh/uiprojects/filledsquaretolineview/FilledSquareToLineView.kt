@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.graphics.RectF
 import android.content.Context
 import android.app.Activity
+import android.util.Log
 import java.lang.Exception
 
 val nodes : Int = 5
@@ -32,7 +33,7 @@ fun Canvas.drawFilledSquareToLine(i : Int, sc : Float, size : Float, paint : Pai
     save()
     scale(1f - 2 * i, 1f)
     paint.color = color1
-    drawRect(RectF(0f, -size, size * sci, size), paint)
+    drawRect(RectF(0f, -size, size * (1 - sci), size), paint)
     paint.color = color2
     drawRect(RectF(size * (1 - sci), -size, size, size), paint)
     restore()
@@ -77,6 +78,7 @@ class FilledSquareToLineView(ctx : Context)  : View(ctx) {
 
         fun update(cb : (Float) -> Unit) {
             scale += scGap * dir
+            Log.d("scale", "$scale")
             if (Math.abs(scale - prevScale) > 1) {
                 scale = prevScale + dir
                 dir = 0f
@@ -100,7 +102,7 @@ class FilledSquareToLineView(ctx : Context)  : View(ctx) {
                 cb()
                 try {
                     Thread.sleep(delay)
-                    cb()
+                    view.postInvalidate()
                 } catch(ex : Exception) {
 
                 }
@@ -214,7 +216,7 @@ class FilledSquareToLineView(ctx : Context)  : View(ctx) {
         fun create(activity : Activity) : FilledSquareToLineView {
             val view : FilledSquareToLineView = FilledSquareToLineView(activity)
             activity.setContentView(view)
-            return view 
+            return view
         }
 
     }
