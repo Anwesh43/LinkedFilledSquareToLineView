@@ -184,6 +184,27 @@ class FilledSquareToLineView(ctx : Context)  : View(ctx) {
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
         }
-        
+    }
+
+    data class Renderer(var view : FilledSquareToLineView) {
+
+        private val animator : Animator = Animator(view)
+        private val fsp : FilledSquare = FilledSquare(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            fsp.draw(canvas, paint)
+            animator.animate {
+                fsp.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            fsp.startUpdating {
+                animator.start()
+            }
+        }
     }
 }
