@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.graphics.RectF
 import android.content.Context
 import android.app.Activity
+import java.lang.Exception
 
 val nodes : Int = 5
 val parts : Int = 2
@@ -87,6 +88,34 @@ class FilledSquareToLineView(ctx : Context)  : View(ctx) {
             if (dir == 0f) {
                 dir = 1f - 2 * prevScale
                 cb()
+            }
+        }
+    }
+
+    data class Animator(var view : View, var animated : Boolean = false) {
+
+        fun animate(cb : () -> Unit) {
+            if (animated) {
+                cb()
+                try {
+                    Thread.sleep(delay)
+                    cb()
+                } catch(ex : Exception) {
+
+                }
+            }
+        }
+
+        fun start() {
+            if (!animated) {
+                animated = true
+                view.postInvalidate()
+            }
+        }
+
+        fun stop() {
+            if (animated) {
+                animated = false
             }
         }
     }
